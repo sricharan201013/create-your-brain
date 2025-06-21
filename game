@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BrainPlay Quiz Game</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #fefae0;
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+    }
+    .quiz-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .option {
+      display: block;
+      background: #eee;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+      transition: 0.2s;
+    }
+    .option:hover {
+      background: #ccc;
+    }
+    .next-btn {
+      margin-top: 15px;
+      padding: 10px 25px;
+      font-size: 16px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">🧠 BrainPlay Quiz</h1>
+  <div class="quiz-box">
+    <div id="question" class="question"></div>
+    <div id="options"></div>
+    <button class="next-btn" onclick="nextQuestion()">Next</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      { question: "Which is heavier: 1 kg of cotton or 1 kg of iron?", options: ["Cotton", "Iron", "Same", "None"], answer: "Same" },
+      { question: "What comes after 5?", options: ["6", "7", "5 again", "It depends"], answer: "6" },
+      { question: "How many sides does a circle have?", options: ["1", "2", "None", "Infinite"], answer: "2" },
+      { question: "What color is a mirror?", options: ["Silver", "Clear", "Green", "Rainbow"], answer: "Green" },
+      { question: "Can a man  crack jee ?", options: ["Yes", "No", "Maybe", "Ask her"], answer: "No" },
+      { question: "Which month has 28 days?", options: ["February", "Only leap year", "All", "None"], answer: "All" },
+      { question: "Find the hidden cat: 🐶🐶🐱🐶", options: ["1st", "2nd", "3rd", "4th"], answer: "3rd" },
+      { question: "If you drop a red stone into the blue sea, what will it become?", options: ["Red", "Blue", "Wet", "Invisible"], answer: "Wet" },
+      { question: "You have only one match. What do you light first?", options: ["Candle", "Lantern", "Match", "Room"], answer: "Match" },
+      { question: "Guess the answer: 😂 + 😂 = ?", options: ["More laughs", "2😂", "😵", "🤣"], answer: "🤣" },
+      { question: "Click the smallest number: 10, 20, 5, 100", options: ["10", "20", "5", "100"], answer: "5" },
+      { question: "What goes up but never comes down?", options: ["Ball", "Rocket", "Age", "Anger"], answer: "Age" },
+      { question: "The more you take, the more you leave behind. What is it?", options: ["Time", "Footsteps", "Memories", "Pain"], answer: "Footsteps" },
+      { question: "Tap the real egg", options: ["Egg 1", "Egg 2", "Egg 3", "Trick question"], answer: "Trick question" },
+      { question: "How many animals of each kind did Moses take on the ark?", options: ["2", "4", "None", "Moses wasn’t there"], answer: "Moses wasn’t there" }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = quizData[current];
+      document.getElementById("question").textContent = "Q" + (current + 1) + ": " + q.question;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option";
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById("result").textContent = "";
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[current].answer;
+      const buttons = document.getElementsByClassName("option");
+      for (let btn of buttons) {
+        btn.disabled = true;
+        if (btn.textContent === correct) btn.style.backgroundColor = "#4CAF50";
+        if (btn.textContent === selected && selected !== correct) btn.style.backgroundColor = "#f44336";
+      }
+      if (selected === correct) {
+        score++;
+        document.getElementById("result").textContent = "✅ Correct!";
+      } else {
+        document.getElementById("result").textContent = "❌ Wrong! Answer: " + correct;
+      }
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < quizData.length) {
+        loadQuestion();
+      } else {
+        document.querySelector(".quiz-box").innerHTML = `
+          <h2>🎉 Quiz Finished!</h2>
+          <p>Your Score: ${score} / ${quizData.length}</p>
+          <p>${score === quizData.length ? "Perfect! 🤩" : score > quizData.length / 2 ? "Nice try! 😊" : "Try again! 😅"}</p>
+        `;
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
